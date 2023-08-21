@@ -17,23 +17,17 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  /// here I am defining my controllers for all the textfields */
-  /// and also defining my user class object */
-
   final userNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
-  
-  
-
-  //firebase auth instance and firebase realtime databse instance ref defined here
+  final numberController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  final ref = FirebaseDatabase.instance.ref("Users/");
-  @override
+  final ref = FirebaseDatabase.instance.ref("Users");
+
   final _formKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -144,6 +138,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                       },
                     ),
+                    TextFormField(
+                      controller: numberController,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        hintText: "Enter your number",
+                        helperStyle:
+                        TextStyle(color: Color(0XFF455A64), fontSize: 10),
+                        labelText: "Number",
+                        labelStyle:
+                        TextStyle(color: Color(0XFF455A64), fontSize: 20),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
+                          ),
+                          borderSide:
+                          BorderSide(color: Color(0XFF455A64), width: 2.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your number';
+                        }
+                      },
+                    ),
                   ],
                 ),
 
@@ -170,20 +188,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
+
                         try {
-                          var userID = Random().nextInt(1000).toString();
-                        await ref.child(userID).set({
-                          "id": userID,
-                          "name": userNameController.value.text,
-                          "email": emailController.value.text,
-                          "password": passwordController.value.text,
-                          
-                        });
+                          var userCredential = await auth.createUserWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+
+                          var userID = userCredential.user?.uid ?? '';
+                          await ref.child(userID).set({
+                            "id": userID,
+                            "name": userNameController.value.text,
+                            "email": emailController.value.text,
+                            "password": passwordController.value.text,
+                            "number": numberController.value.text,
+                          });
+
                           await auth.createUserWithEmailAndPassword(
-                              email: emailController.text.toString(),
-                              password: passwordController.text.toString()).then((value) => {
-                                Navigator.pushNamed(context, 'SignInScreen')
-                              });
+                            email: emailController.text.toString(),
+                            password: passwordController.text.toString(),
+                          );
+
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           Utilities().show_Message("Account Created");
                         } on FirebaseAuthException catch (e) {

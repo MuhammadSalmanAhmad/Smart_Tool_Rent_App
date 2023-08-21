@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tool_rental_app/HomeScreen/HomeScreen.dart';
 import 'package:tool_rental_app/SignInScreen.dart';
+import 'Screens/HomeScreen/HomeScreen.dart';
 import 'SignUpScreen.dart';
+import 'UI/splash_screen.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Stripe.publishableKey = 'pk_test_51NdKIjGBms1IUDYCdwFOqjTTPSU9F6kvQqHlAoJWF4csTQSyZkSFZWVrKk762agJ6tyLTWdYc8Sh0dgA4zezYLnR00YwDCAx00';
+
   runApp(  MaterialApp(initialRoute: '/',
   routes: {
-    '/':(context)=>LaunchScreen(),
+    '/':(context)=>SplashScreen(),
+    'LaunchScreen':(context)=>LaunchScreen(),
     'SignUpScreen':(context)=>const SignUpScreen(),
     'SignInScreen':((context) => SignInScreen()),
     'HomeScreen':(context) => HomeScreen()

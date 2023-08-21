@@ -2,7 +2,7 @@ import 'package:tool_rental_app/utilities/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'HomeScreen/HomeScreen.dart';
+import 'Screens/HomeScreen/HomeScreen.dart';
 import 'SignUpScreen.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -16,6 +16,7 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
